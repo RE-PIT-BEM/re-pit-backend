@@ -23,5 +23,8 @@ func NewRestHTTPServer() *gin.Engine {
 		panic(err)
 	}
 
+	// Migration
+	// db.AutoMigrate(&domain.User{})
+
 	return router
 }
