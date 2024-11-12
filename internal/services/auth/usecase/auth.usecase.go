@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"errors"
-
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/dto"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/user"
@@ -18,5 +16,5 @@ func NewAuthUsecase(userRepo user.UserRepository) auth.AuthUsecase {
 
 func (u *AuthUsecase) Login(loginRequest *dto.LoginRequestDTO) (string, error) {
 	// Logic Of Login User
-	return "oke", errors.New("OKOK")
+	return "oke", nil
 }

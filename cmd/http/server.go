@@ -5,6 +5,9 @@ import (
 
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/config"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/database"
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/delivery"
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/usecase"
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/user/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,13 +21,22 @@ func NewRestHTTPServer() *gin.Engine {
 		})
 	})
 
-	_, err := database.NewDatabaseConnection()
+	// Database Init
+	db, err := database.NewDatabaseConnection()
 	if err != nil {
 		panic(err)
 	}
 
 	// Migration
 	// db.AutoMigrate(&domain.User{})
+
+	// Repository Init
+	userRepo := repository.NewUserRepository(db)
+	// Usecase Init
+	authUsecase := usecase.NewAuthUsecase(userRepo)
+
+	// Delivery Init
+	delivery.NewAuthDelivery(router, authUsecase)
 
 	return router
 }
