@@ -19,3 +19,9 @@ func (u *UserRepository) FindByNIM(NIM string) (domain.User, error) {
 	err := u.db.Where("nim = ?", NIM).First(&user).Error
 	return user, err
 }
+
+func (u *UserRepository) FindById(userId int) (domain.User, error) {
+	var user domain.User
+	err := u.db.First(&user, userId).Error
+	return user, err
+}

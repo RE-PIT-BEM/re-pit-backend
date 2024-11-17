@@ -3,6 +3,7 @@ package delivery
 import (
 	"net/http"
 
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/middleware"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/dto"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth"
 	"github.com/gin-gonic/gin"
@@ -17,12 +18,13 @@ func NewAuthDelivery(router *gin.Engine, usecase auth.AuthUsecase) {
 	handler := &AuthDelivery{router, usecase}
 
 	router.POST("/login", handler.LoginHandler)
+	router.GET("/authorize", middleware.RequireAuth, handler.AuthorizeHandler)
 }
 
 func (d *AuthDelivery) LoginHandler(ctx *gin.Context) {
 	var loginReq dto.LoginRequestDTO
 
-	err := ctx.BindJSON(&loginReq)
+	err := ctx.Bind(&loginReq)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request!",
@@ -42,5 +44,31 @@ func (d *AuthDelivery) LoginHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Succesfully Login!",
 		"data":    data,
+	})
+}
+
+func (d *AuthDelivery) AuthorizeHandler(ctx *gin.Context) {
+	userId, userIdExist := ctx.Get("userId")
+
+	if !userIdExist {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "User Not Found",
+		})
+		return
+	}
+
+	userData, err := d.usecase.Authorize(int(userId.(float64)))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "User Not Found",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Succesfully Authorized!",
+		"data": gin.H{
+			"user": userData,
+		},
 	})
 }
