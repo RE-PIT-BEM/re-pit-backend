@@ -40,8 +40,9 @@ func (u *AuthUsecase) Login(loginRequest *dto.LoginRequestDTO) (dto.LoginRespons
 
 	// Creating token
 	token, err := lib.CreateJWTToken(jwt.MapClaims{
-		"sub": user.ID,
-		"exp": time.Now().Add(time.Hour * 10).Unix(),
+		"sub":  user.ID,
+		"role": user.Role,
+		"exp":  time.Now().Add(time.Hour * 10).Unix(),
 	})
 	if err != nil {
 		fmt.Println(err.Error())

@@ -19,6 +19,11 @@ func NewAuthDelivery(router *gin.Engine, usecase auth.AuthUsecase) {
 
 	router.POST("/login", handler.LoginHandler)
 	router.GET("/authorize", middleware.RequireAuth, handler.AuthorizeHandler)
+	router.GET("/need-admin", middleware.RequireAdmin, func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Kamu admin ya!",
+		})
+	})
 }
 
 func (d *AuthDelivery) LoginHandler(ctx *gin.Context) {
