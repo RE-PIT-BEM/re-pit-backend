@@ -53,14 +53,7 @@ func (d *AuthDelivery) LoginHandler(ctx *gin.Context) {
 }
 
 func (d *AuthDelivery) AuthorizeHandler(ctx *gin.Context) {
-	userId, userIdExist := ctx.Get("userId")
-
-	if !userIdExist {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"message": "User Not Found",
-		})
-		return
-	}
+	userId, _ := ctx.Get("userId")
 
 	userData, err := d.usecase.Authorize(int(userId.(float64)))
 	if err != nil {

@@ -1,18 +1,25 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/config"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/database"
-	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/delivery"
-	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/usecase"
-	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/user/repository"
+
+	auth_delivery "github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/delivery"
+	request_delivery "github.com/RE-PIT-BEM/re-pit-backend/internal/services/request/delivery"
+
+	auth_usecase "github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/usecase"
+	request_usecase "github.com/RE-PIT-BEM/re-pit-backend/internal/services/request/usecase"
+
+	request_repository "github.com/RE-PIT-BEM/re-pit-backend/internal/services/request/repository"
+	user_repository "github.com/RE-PIT-BEM/re-pit-backend/internal/services/user/repository"
 	"github.com/gin-gonic/gin"
 )
 
-func NewRestHTTPServer() *gin.Engine {
-	config.Load()
+func NewRestHTTPServer() {
+	config := config.Load()
 	router := gin.Default()
 
 	router.GET("/", func(ctx *gin.Context) {
@@ -28,15 +35,25 @@ func NewRestHTTPServer() *gin.Engine {
 	}
 
 	// Migration
-	// db.AutoMigrate(&domain.User{})
+	// db.AutoMigrate(&domain.Request{})
 
 	// Repository Init
-	userRepo := repository.NewUserRepository(db)
+	userRepo := user_repository.NewUserRepository(db)
+	requestRepo := request_repository.NewRequestRepository(db)
 	// Usecase Init
-	authUsecase := usecase.NewAuthUsecase(userRepo)
-
+	authUsecase := auth_usecase.NewAuthUsecase(userRepo)
+	requestUsecase := request_usecase.NewRequestUsecase(requestRepo)
 	// Delivery Init
-	delivery.NewAuthDelivery(router, authUsecase)
+	auth_delivery.NewAuthDelivery(router, authUsecase)
+	request_delivery.NewRequestDelivery(router, requestUsecase)
 
-	return router
+	// Run Server
+	var httpAddress string
+	if config.GetString("env") == "LOCAL" {
+		httpAddress = fmt.Sprintf("%s:%s", config.GetString("host"), config.GetString("port"))
+	} else {
+		httpAddress = fmt.Sprintf(":%s", config.GetString("port"))
+	}
+
+	router.Run(httpAddress)
 }
