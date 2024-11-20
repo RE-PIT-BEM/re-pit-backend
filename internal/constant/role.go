@@ -1,4 +1,6 @@
 package constant
 
-var ROLE_ADMIN = "ADMIN"
-var ROLE_USER = "USER"
+const (
+	ROLE_ADMIN = "ADMIN"
+	ROLE_USER  = "USER"
+)
