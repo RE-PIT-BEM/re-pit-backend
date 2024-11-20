@@ -17,9 +17,35 @@ func NewRequestRepository(db *gorm.DB) request.RequestRepository {
 
 func (r *RequestRepository) Create(request *domain.Request) error {
 	request.RequestStatus = constant.REQUEST_STATUS_PENDING
-	// request.CreatedAt = time.Now()
-	// request.UpdatedAt = time.Now()
 
 	err := r.db.Create(&request).Error
 	return err
+}
+
+func (r *RequestRepository) FindAll() ([]domain.Request, error) {
+	var requests []domain.Request
+	err := r.db.Find(&requests).Error
+	return requests, err
+}
+
+func (r *RequestRepository) FindByID(id int) (domain.Request, error) {
+	var request domain.Request
+	err := r.db.First(&request, id).Error
+	return request, err
+}
+
+func (r *RequestRepository) Update(request *domain.Request) error {
+	err := r.db.Save(&request).Error
+	return err
+}
+
+func (r *RequestRepository) Delete(request *domain.Request) error {
+	err := r.db.Delete(&request).Error
+	return err
+}
+
+func (r *RequestRepository) FindByUserID(userID int) ([]domain.Request, error) {
+	var requests []domain.Request
+	err := r.db.Where("user_id = ?", userID).Find(&requests).Error
+	return requests, err
 }
