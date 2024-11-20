@@ -50,6 +50,12 @@ func (u *AuthUsecase) Login(loginRequest *dto.LoginRequestDTO) (dto.LoginRespons
 	}
 
 	response.Token = token
+	response.User.NIM = user.NIM
+	response.User.Name = user.Name
+	response.User.Department = user.Department
+	response.User.Major = user.Major
+	response.User.Role = user.Role
+
 	return response, nil
 }
 
@@ -60,6 +66,7 @@ func (u *AuthUsecase) Authorize(userID int) (dto.AuthorizeResponseDTO, error) {
 	response.NIM = userData.NIM
 	response.Name = userData.Name
 	response.Department = userData.Department
+	response.Major = userData.Major
 	response.Role = userData.Role
 
 	if err != nil {
