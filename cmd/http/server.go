@@ -6,6 +6,7 @@ import (
 
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/config"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/database"
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/middleware"
 
 	auth_delivery "github.com/RE-PIT-BEM/re-pit-backend/internal/services/auth/delivery"
 	request_delivery "github.com/RE-PIT-BEM/re-pit-backend/internal/services/request/delivery"
@@ -21,6 +22,7 @@ import (
 func NewRestHTTPServer() {
 	config := config.Load()
 	router := gin.Default()
+	router.Use(middleware.CORSMiddleware())
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
