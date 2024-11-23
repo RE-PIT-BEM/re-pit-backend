@@ -1,12 +1,14 @@
 package delivery
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/middleware"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/dto"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/request"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type RequestDelivery struct {
@@ -29,8 +31,15 @@ func (r *RequestDelivery) CreateRequestHandler(ctx *gin.Context) {
 	var createRequestDTO dto.CreateRequestDTO
 	err := ctx.Bind(&createRequestDTO)
 	if err != nil {
+		errorMassages := []string{}
+		for _, e := range err.(validator.ValidationErrors) {
+			message := fmt.Sprintf("Error in field %s, condition: %s", e.Field(), e.ActualTag())
+			errorMassages = append(errorMassages, message)
+		}
+
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Bad Request!",
+			"message":       "Bad Request!",
+			"errorMessages": errorMassages,
 		})
 		return
 	}

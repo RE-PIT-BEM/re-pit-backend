@@ -11,9 +11,9 @@ type CreateRequestDTO struct {
 
 	ProgramDescription          string    `json:"program_description" binding:"required"`
 	ProgramTimeline             string    `json:"program_timeline" binding:"required"`
-	ProgramTimelineExtend       string    `json:"program_timeline_extend" binding:"required"`
+	ProgramTimelineExtend       string    `json:"program_timeline_extend"`
 	ProgramPhotoURL             string    `json:"program_photo_url" binding:"required,url"`
-	ProgramLogoURL              string    `json:"program_logo_url" binding:"required,url"`
+	ProgramLogoURL              string    `json:"program_logo_url"`
 	ProgramDivision             string    `json:"program_division" binding:"required"`
 	AcceptenceMessage           string    `json:"acceptence_message" binding:"required"`
 	RejectionMessage            string    `json:"rejection_message" binding:"required"`
