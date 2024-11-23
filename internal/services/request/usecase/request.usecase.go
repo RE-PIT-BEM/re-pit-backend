@@ -19,7 +19,7 @@ func NewRequestUsecase(repo request.RequestRepository) request.RequestUsecase {
 
 func (u *RequestUsecase) CreateRequest(req *dto.CreateRequestDTO, userId int) error {
 	// check if website relasedate is less than 8 dyas from now
-	if req.WebsiteReleaseDate.Before(time.Now().Add((time.Hour * (8 * 24)))) {
+	if req.WebsiteReleaseDate.Before(time.Now().Add((time.Hour * (7 * 24)))) {
 		return errors.New("Website Release Date must be at least 8 days from now")
 	}
 
