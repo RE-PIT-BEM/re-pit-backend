@@ -5,7 +5,7 @@ import "time"
 type CreateRequestDTO struct {
 	ProgramName string `json:"program_name" binding:"required"`
 	Department  string `json:"department" binding:"required"`
-	Email       string `json:"email" binding:"required"`
+	ContactInfo string `json:"contact_info" binding:"required"`
 	ContactName string `json:"contact_name" binding:"required"`
 	GroupLink   string `json:"group_link" binding:"required"`
 

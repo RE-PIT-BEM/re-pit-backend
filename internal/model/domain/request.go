@@ -8,8 +8,8 @@ type Request struct {
 
 	ProgramName string `json:"program_name" gorm:"not null"`
 	Department  string `json:"department" gorm:"not null;type:varchar(100)"`
-	Email       string `json:"email" gorm:"not null;type:varchar(100)"`
 	ContactName string `json:"contact_name" gorm:"not null;type:varchar(100)"`
+	ContactInfo string `json:"contact_info" gorm:"not null;type:varchar(100)"`
 	GroupLink   string `json:"group_link" gorm:"not null;type:varchar(100)"`
 
 	ProgramDescription          string    `json:"program_description" gorm:"not null"`

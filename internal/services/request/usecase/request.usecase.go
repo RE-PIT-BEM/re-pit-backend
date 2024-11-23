@@ -43,7 +43,7 @@ func (u *RequestUsecase) CreateRequest(req *dto.CreateRequestDTO, userId int) er
 
 		ProgramName: req.ProgramName,
 		Department:  req.Department,
-		Email:       req.Email,
+		ContactInfo: req.ContactInfo,
 		ContactName: req.ContactName,
 		GroupLink:   req.GroupLink,
 
