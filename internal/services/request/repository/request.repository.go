@@ -28,7 +28,13 @@ func (r *RequestRepository) FindAll() ([]domain.Request, error) {
 	return requests, err
 }
 
-func (r *RequestRepository) FindByID(id int) (domain.Request, error) {
+func (r *RequestRepository) FindAllByUserId(userId int) ([]domain.Request, error) {
+	var requests []domain.Request
+	err := r.db.Find(&requests, "id = ?", userId).Error
+	return requests, err
+}
+
+func (r *RequestRepository) FindByID(id string) (domain.Request, error) {
 	var request domain.Request
 	err := r.db.First(&request, id).Error
 	return request, err

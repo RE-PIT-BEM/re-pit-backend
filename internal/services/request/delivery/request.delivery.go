@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/constant"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/middleware"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/dto"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/request"
@@ -23,6 +24,8 @@ func NewRequestDelivery(router *gin.Engine, usecase request.RequestUsecase) {
 	}
 
 	router.POST("/request", middleware.RequireAuth, handler.CreateRequestHandler)
+	router.GET("/request", middleware.RequireAuth, handler.GetAllRequestHandler)
+	router.GET("/request/:id", middleware.RequireAuth, handler.GetRequestByIDHandler)
 }
 
 func (r *RequestDelivery) CreateRequestHandler(ctx *gin.Context) {
@@ -55,5 +58,59 @@ func (r *RequestDelivery) CreateRequestHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Request Created!",
+	})
+}
+
+func (r *RequestDelivery) GetAllRequestHandler(ctx *gin.Context) {
+	role := ctx.GetString("role")
+	userId, _ := ctx.Get("userId")
+
+	if role == constant.ROLE_ADMIN {
+		requests, err := r.usecase.GetAllRequest()
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"message":      "Bad Request!",
+				"errorMessage": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Request Fetched!",
+			"data":    gin.H{"requests": requests},
+		})
+	} else {
+		requests, err := r.usecase.GetRequestByUserID(int(userId.(float64)))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"message":      "Bad Request!",
+				"errorMessage": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Request Fetched!",
+			"data":    gin.H{"requests": requests},
+		})
+	}
+
+}
+
+func (r *RequestDelivery) GetRequestByIDHandler(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	request, err := r.usecase.GetRequestByID(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message":      "Bad Request!",
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Request Fetched!",
+		"data":    gin.H{"request": request},
 	})
 }

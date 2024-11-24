@@ -30,6 +30,7 @@ func RequireAuth(ctx *gin.Context) {
 	}
 
 	ctx.Set("userId", claims["sub"])
+	ctx.Set("role", claims["role"])
 	ctx.Next()
 }
 

@@ -4,9 +4,11 @@ import (
 	"errors"
 	"time"
 
+	"github.com/RE-PIT-BEM/re-pit-backend/internal/constant"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/domain"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/model/dto"
 	"github.com/RE-PIT-BEM/re-pit-backend/internal/services/request"
+	"github.com/gin-gonic/gin"
 )
 
 type RequestUsecase struct {
@@ -68,4 +70,27 @@ func (u *RequestUsecase) CreateRequest(req *dto.CreateRequestDTO, userId int) er
 
 	err := u.repo.Create(requestDomain)
 	return err
+}
+
+func (u *RequestUsecase) GetAllRequest() ([]domain.Request, error) {
+	requests, err := u.repo.FindAll()
+	return requests, err
+}
+
+func (u *RequestUsecase) GetRequestByUserID(userID int) ([]domain.Request, error) {
+	requests, err := u.repo.FindByUserID(userID)
+	return requests, err
+}
+
+func (u *RequestUsecase) GetRequestByID(ctx *gin.Context, id string) (domain.Request, error) {
+	userID, _ := ctx.Get("userId")
+	role := ctx.GetString("role")
+
+	request, err := u.repo.FindByID(id)
+
+	if request.ID != userID && role != constant.ROLE_ADMIN {
+		return domain.Request{}, errors.New("Is not your request!")
+	}
+
+	return request, err
 }
