@@ -106,3 +106,15 @@ func (u *RequestUsecase) AcceptRequest(id string) error {
 	err = u.repo.Update(&request)
 	return err
 }
+
+func (u *RequestUsecase) RejectRequest(id string) error {
+	request, err := u.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+
+	request.RequestStatus = constant.REQUEST_STATUS_ACCEPTED
+
+	err = u.repo.Update(&request)
+	return err
+}
