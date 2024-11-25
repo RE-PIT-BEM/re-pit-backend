@@ -113,7 +113,7 @@ func (u *RequestUsecase) RejectRequest(id string) error {
 		return err
 	}
 
-	request.RequestStatus = constant.REQUEST_STATUS_ACCEPTED
+	request.RequestStatus = constant.REQUEST_STATUS_REJECTED
 
 	err = u.repo.Update(&request)
 	return err
