@@ -27,3 +27,7 @@ type CreateRequestDTO struct {
 
 	WebsiteReleaseDate time.Time `json:"website_release_date" binding:"required"`
 }
+
+type RejectRequestDTO struct {
+	RejectedStatusMessage string `json:"rejected_status_message" binding:"required"`
+}

@@ -12,5 +12,5 @@ type RequestUsecase interface {
 	GetRequestByUserID(userID int) ([]domain.Request, error)
 	GetRequestByID(ctx *gin.Context, id string) (domain.Request, error)
 	AcceptRequest(id string) error
-	RejectRequest(id string) error
+	RejectRequest(id string, req dto.RejectRequestDTO) error
 }

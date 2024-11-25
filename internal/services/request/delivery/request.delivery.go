@@ -137,7 +137,23 @@ func (r *RequestDelivery) AcceptRequestHandler(ctx *gin.Context) {
 func (r *RequestDelivery) RejectRequestHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	err := r.usecase.RejectRequest(id)
+	var rejectedRequestDTO dto.RejectRequestDTO
+	err := ctx.Bind(&rejectedRequestDTO)
+	if err != nil {
+		errorMassages := []string{}
+		for _, e := range err.(validator.ValidationErrors) {
+			message := fmt.Sprintf("Error in field %s, condition: %s", e.Field(), e.ActualTag())
+			errorMassages = append(errorMassages, message)
+		}
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message":       "Bad Request!",
+			"errorMessages": errorMassages,
+		})
+		return
+	}
+
+	err = r.usecase.RejectRequest(id, rejectedRequestDTO)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message":      "Bad Request!",
