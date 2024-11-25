@@ -94,3 +94,15 @@ func (u *RequestUsecase) GetRequestByID(ctx *gin.Context, id string) (domain.Req
 
 	return request, err
 }
+
+func (u *RequestUsecase) AcceptRequest(id string) error {
+	request, err := u.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+
+	request.RequestStatus = constant.REQUEST_STATUS_ACCEPTED
+
+	err = u.repo.Update(&request)
+	return err
+}

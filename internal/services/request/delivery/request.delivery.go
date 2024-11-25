@@ -26,6 +26,7 @@ func NewRequestDelivery(router *gin.Engine, usecase request.RequestUsecase) {
 	router.POST("/request", middleware.RequireAuth, handler.CreateRequestHandler)
 	router.GET("/request", middleware.RequireAuth, handler.GetAllRequestHandler)
 	router.GET("/request/:id", middleware.RequireAuth, handler.GetRequestByIDHandler)
+	router.PUT("/request/:id/accept", middleware.RequireAuth, middleware.RequireAdmin, handler.AcceptRequestHandler)
 }
 
 func (r *RequestDelivery) CreateRequestHandler(ctx *gin.Context) {
@@ -112,5 +113,23 @@ func (r *RequestDelivery) GetRequestByIDHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Request Fetched!",
 		"data":    gin.H{"request": request},
+	})
+}
+
+// delivery for aacpet rrequest
+func (r *RequestDelivery) AcceptRequestHandler(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	err := r.usecase.AcceptRequest(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message":      "Bad Request!",
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Request Accepted!",
 	})
 }

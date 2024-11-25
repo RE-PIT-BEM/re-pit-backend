@@ -28,8 +28,9 @@ type Request struct {
 	ProgramCloseDate            time.Time `json:"program_close_date" gorm:"not null"`
 	ProgramAnnouncementDate     time.Time `json:"program_announcement_date" gorm:"not null"`
 
-	RequestStatus      string    `json:"status" gorm:"not null"`
-	WebsiteReleaseDate time.Time `json:"website_release_date" gorm:"not null"`
+	RequestStatus         string    `json:"status" gorm:"not null"`
+	RejectedStatusMessage string    `json:"rejected_status_message"`
+	WebsiteReleaseDate    time.Time `json:"website_release_date" gorm:"not null"`
 
 	CreatedAt time.Time `json:"created_at" gorm:"not null"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"not null"`
