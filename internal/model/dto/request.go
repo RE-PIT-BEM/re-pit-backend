@@ -17,6 +17,7 @@ type CreateRequestDTO struct {
 	ProgramDivision             string    `json:"program_division" binding:"required"`
 	AcceptenceMessage           string    `json:"acceptence_message" binding:"required"`
 	RejectionMessage            string    `json:"rejection_message" binding:"required"`
+	AcceptedBatch               string    `json:"accepted_batch" binding:"required"`
 	ProgramQuotes               string    `json:"program_quotes" binding:"required"`
 	ProgramRegistrationFlow     string    `json:"program_registration_flow" binding:"required"`
 	ProgramApplicationForm      string    `json:"program_application_form" binding:"required"`

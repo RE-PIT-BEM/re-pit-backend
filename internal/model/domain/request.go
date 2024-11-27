@@ -21,6 +21,7 @@ type Request struct {
 	AcceptenceMessage           string    `json:"acceptence_message" gorm:"not null"`
 	RejectionMessage            string    `json:"rejection_message" gorm:"not null"`
 	ProgramQuotes               string    `json:"program_quotes" gorm:"not null"`
+	AcceptedBatch               string    `json:"accepted_batch" gorm:"not null"`
 	ProgramRegistrationFlow     string    `json:"program_registration_flow" gorm:"not null"`
 	ProgramApplicationForm      string    `json:"program_application_form" gorm:"not null"`
 	ProgramRegistrationTemplate string    `json:"program_registration_template" gorm:"not null"`

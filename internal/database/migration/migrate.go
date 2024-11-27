@@ -15,7 +15,7 @@ func main() {
 	}
 
 	tables := []interface{}{
-		&domain.User{}, &domain.Request{},
+		&domain.Request{},
 	}
 
 	fmt.Println("Dropping tables...")

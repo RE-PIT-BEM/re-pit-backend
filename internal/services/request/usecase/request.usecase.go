@@ -64,6 +64,7 @@ func (u *RequestUsecase) CreateRequest(req *dto.CreateRequestDTO, userId int) er
 		ProgramOpenDate:             req.ProgramOpenDate,
 		ProgramCloseDate:            req.ProgramCloseDate,
 		ProgramAnnouncementDate:     req.ProgramAnnouncementDate,
+		AcceptedBatch:               req.AcceptedBatch,
 
 		WebsiteReleaseDate: req.WebsiteReleaseDate,
 	}
