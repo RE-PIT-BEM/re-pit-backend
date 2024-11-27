@@ -84,12 +84,12 @@ func (u *RequestUsecase) GetRequestByUserID(userID int) ([]domain.Request, error
 }
 
 func (u *RequestUsecase) GetRequestByID(ctx *gin.Context, id string) (domain.Request, error) {
-	userID, _ := ctx.Get("userId")
+	userId, _ := ctx.Get("userId")
 	role := ctx.GetString("role")
 
 	request, err := u.repo.FindByID(id)
 
-	if request.ID != userID && role != constant.ROLE_ADMIN {
+	if request.UserId != int(userId.(float64)) && role != constant.ROLE_ADMIN {
 		return domain.Request{}, errors.New("Is not your request!")
 	}
 
