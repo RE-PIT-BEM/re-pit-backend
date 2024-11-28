@@ -96,6 +96,47 @@ func (u *RequestUsecase) GetRequestByID(ctx *gin.Context, id string) (domain.Req
 	return request, err
 }
 
+func (u *RequestUsecase) UpdateRequest(ctx *gin.Context, id string, req dto.UpdateRequestDTO) error {
+	userId, _ := ctx.Get("userId")
+	role := ctx.GetString("role")
+
+	request, err := u.repo.FindByID(id)
+
+	if err != nil {
+		return err
+	}
+
+	if request.UserId != int(userId.(float64)) && role != constant.ROLE_ADMIN {
+		return errors.New("Is not your request!")
+	}
+
+	request.ProgramName = req.ProgramName
+	request.Department = req.Department
+	request.ContactInfo = req.ContactInfo
+	request.ContactName = req.ContactName
+	request.GroupLink = req.GroupLink
+
+	request.ProgramDescription = req.ProgramDescription
+	request.ProgramTimeline = req.ProgramTimeline
+	request.ProgramTimelineExtend = req.ProgramTimelineExtend
+	request.ProgramPhotoURL = req.ProgramPhotoURL
+	request.ProgramLogoURL = req.ProgramLogoURL
+	request.ProgramDivision = req.ProgramDivision
+	request.AcceptenceMessage = req.AcceptenceMessage
+	request.RejectionMessage = req.RejectionMessage
+	request.ProgramQuotes = req.ProgramQuotes
+	request.ProgramRegistrationFlow = req.ProgramRegistrationFlow
+	request.ProgramApplicationForm = req.ProgramApplicationForm
+	request.ProgramRegistrationTemplate = req.ProgramRegistrationTemplate
+	request.AcceptedBatch = req.AcceptedBatch
+
+	request.RequestStatus = constant.REQUEST_STATUS_PENDING
+
+	err = u.repo.Update(&request)
+
+	return err
+}
+
 func (u *RequestUsecase) AcceptRequest(id string) error {
 	request, err := u.repo.FindByID(id)
 	if err != nil {

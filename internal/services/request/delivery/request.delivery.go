@@ -28,6 +28,7 @@ func NewRequestDelivery(router *gin.Engine, usecase request.RequestUsecase) {
 	router.GET("/request/:id", middleware.RequireAuth, handler.GetRequestByIDHandler)
 	router.PUT("/request/:id/accept", middleware.RequireAuth, middleware.RequireAdmin, handler.AcceptRequestHandler)
 	router.PUT("/request/:id/reject", middleware.RequireAuth, middleware.RequireAdmin, handler.RejectRequestHandler)
+	router.PUT("/request/:id", middleware.RequireAuth, handler.UpdateRequestHandler)
 }
 
 func (r *RequestDelivery) CreateRequestHandler(ctx *gin.Context) {
@@ -96,7 +97,39 @@ func (r *RequestDelivery) GetAllRequestHandler(ctx *gin.Context) {
 			"data":    gin.H{"requests": requests},
 		})
 	}
+}
 
+func (r *RequestDelivery) UpdateRequestHandler(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	var updateRequestDTO dto.UpdateRequestDTO
+	err := ctx.Bind(&updateRequestDTO)
+	if err != nil {
+		errorMassages := []string{}
+		for _, e := range err.(validator.ValidationErrors) {
+			message := fmt.Sprintf("Error in field %s, condition: %s", e.Field(), e.ActualTag())
+			errorMassages = append(errorMassages, message)
+		}
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message":       "Bad Request!",
+			"errorMessages": errorMassages,
+		})
+		return
+	}
+
+	err = r.usecase.UpdateRequest(ctx, id, updateRequestDTO)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message":      "Bad Request!",
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Request Updated!",
+	})
 }
 
 func (r *RequestDelivery) GetRequestByIDHandler(ctx *gin.Context) {
